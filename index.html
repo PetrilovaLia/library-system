@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knižnica - Správa kníh</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="logo">
+            <div class="logo_icon"><img src="../assets/library.png" alt="iconka kniznice" width="20px"></div>
+            <h2>Knižnica</h2>
+        </div>
+        
+        <nav class="menu">
+            <button class="menu_item active" onclick="showSection('books')">
+                <span class="menu_icon"> <img src="../assets/book.png" alt="ikonka knihy" width="15px" ></span>
+                Knihy
+            </button>
+            <button class="menu_item" onclick="showSection('readers')">
+                <span class="menu_icon"><img src="../assets/user.png" alt="ikonka uzivatela" width="15px" ></span>
+                Čitatelia
+            </button>
+            <button class="menu_item" onclick="showSection('history')">
+                <span class="menu_icon"><img src="../assets/history.png" alt="ikonka vypoziciek" width="17px" ></span>
+                História
+            </button>
+        </nav>
+    </div>
+
+    <!-- main -->
+    <div class="main_content">
+        
+        <!-- books -->
+        <section id="sectionBooks" class="books_section active">
+            <div class="books_header">
+                <h1>Zoznam kníh</h1>
+                <button class="btn_main" onclick="openAddbookPopup()">
+                    <span>+</span> Pridať knihu
+                </button>
+            </div>
+
+            <div class="search_boxik">
+                <input type="text" id="searchBooks" placeholder="Hľadať podľa názvu alebo autora..." onkeyup="filterBooks()">
+            </div>
+
+            <div class="table_box">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Názov</th>
+                            <th>Autor</th>
+                            <th>Stav</th>
+                            <th>Vypožičané</th>
+                            <th>Akcie</th>
+                        </tr>
+                    </thead>
+                    <tbody id="booksTableBody">
+                        <!-- riadky s pridanými knihami  -->
+                    </tbody>
+                </table>
+                <div id="booksEmptyState" class="books_empty">
+                    Zatiaľ žiadne knihy
+                </div>
+            </div>
+        </section>
+
+        <!-- readers -->
+        <section id="sectionReaders" class="books_section">
+            <div class="books_header">
+                <h1>Zoznam čitateľov</h1>
+                <button class="btn_main" onclick="openAddReaderPopup()">
+                    <span>+</span> Pridať čitateľa
+                </button>
+            </div>
+
+            <div class="search_boxik">
+                <input type="text" id="searchReaders" placeholder="Hľadať podľa mena alebo čísla OP..." onkeyup="filterReaders()">
+            </div>
+
+            <div class="table_box">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Číslo OP</th>
+                            <th>Meno</th>
+                            <th>Priezvisko</th>
+                            <th>Dátum narodenia</th>
+                            <th>Akcie</th>
+                        </tr>
+                    </thead>
+                    <tbody id="readersTableBody">
+                        <!-- riadky s pridanými čitateľmi -->
+                    </tbody>
+                </table>
+                <div id="readersEmptyState" class="books_empty">
+                    Zatiaľ žiadni čitatelia
+                </div>
+            </div>
+        </section>
+
+        <!-- historia -->
+        <section id="sectionHistory" class="books_section">
+            <div class="books_header">
+                <h1>História výpožičiek</h1>
+                <button class="btn_main" onclick="openBorrowPopup()">
+                    <span>+</span> Vypožičať knihu
+                </button>
+            </div>
+
+            <div class="table_box">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Kniha</th>
+                            <th>Čitateľ</th>
+                            <th>Dátum vypožičania</th>
+                            <th>Vrátiť do / Vrátené</th>
+                            <th>Stav</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- data o pozicani/vrateni -->
+                    </tbody>
+                </table>
+                <div id="historyEmptyState" class="books_empty">
+                    Zatiaľ žiadne výpožičky
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- popupy pre pridanie udajov - kniha -->
+    <div id="bookPopup" class="popup">
+        <div class="popup_content">
+            <div class="popup_header">
+                <h2 id="bookPopupTitle">Pridať novú knihu</h2>
+                <button class="popup_crosstoclose" onclick="closebookPopup()">&times;</button>
+            </div>
+            <div class="popup_bodz">
+                <div class="form">
+                    <label>Názov knihy</label>
+                    <input type="text" id="bookTitle">
+                </div>
+                <div class="form">
+                    <label>Autor</label>
+                    <input type="text" id="bookAuthor">
+                </div>
+            </div>
+            <div class="popup_footer">
+                <button class="btn_popup" onclick="closebookPopup()">Zrušiť</button>
+                <button class="btn_main" id="bookSubmitBtn" onclick="addBook()">Pridať knihu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- popupy pre pridanie udajov - citatel  -->
+    <div id="readerModal" class="popup">
+        <div class="popup_content">
+            <div class="popup_header">
+                <h2 id="readerModalTitle">Pridať nového čitateľa</h2>
+                <button class="popup_crosstoclose" onclick="closeReaderPopup()">&times;</button>
+            </div>
+            <div class="popup_bodz">
+                <div class="form">
+                    <label>Číslo občianskeho preukazu</label>
+                    <input type="text" id="readerIdCard" placeholder="napr. AB123456">
+                </div>
+                <div class="form_row">
+                    <div class="form">
+                        <label>Meno</label>
+                        <input type="text" id="readerName">
+                    </div>
+                    <div class="form">
+                        <label>Priezvisko</label>
+                        <input type="text" id="readerSurname">
+                    </div>
+                </div>
+                <div class="form">
+                    <label>Dátum narodenia</label>
+                    <input type="date" id="readerBirthDate">
+                </div>
+            </div>
+            <div class="popup_footer">
+                <button class="btn_popup" onclick="closeReaderPopup()">Zrušiť</button>
+                <button class="btn_main" id="readerSubmitBtn" onclick="addReader()">Pridať čitateľa</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- popupy pre pridanie udajov - vypozicanie -->
+    <div id="borrowModal" class="popup">
+        <div class="popup_content">
+            <div class="popup_header">
+                <h2>Vypožičať knihu</h2>
+                <button class="popup_crosstoclose" onclick="closeBorrowPopup()">&times;</button>
+            </div>
+            <div class="popup_bodz">
+                <div class="form">
+                    <label>Kniha</label>
+                    <select id="borrowBook">
+                        <option value="">Vyber knihu</option>
+                    </select>
+                </div>
+                <div class="form">
+                    <label>Čitateľ</label>
+                    <select id="borrowReader">
+                        <option value="">Vyber čitateľa</option>
+                    </select>
+                </div>
+            </div>
+            <div class="popup_footer">
+                <button class="btn_popup" onclick="closeBorrowPopup()">Zrušiť</button>
+                <button class="btn_main" onclick="borrowBook()">Vypožičať</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
